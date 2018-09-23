@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: constantinschreiber/rssi-polling:v1
+    dependencies:
+            - git clone git@github.com:codeuniversity/triangl-customer-service.git
     steps:
       - checkout
       - run:
