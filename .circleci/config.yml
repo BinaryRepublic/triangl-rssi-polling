@@ -15,4 +15,6 @@ jobs:
           command: sudo apt-get install time
       - run:
           name: Compile
-          command: make /home/openwrt/openwrtsdk/package/rssi-polling/compile
+          command: |
+                  cd /home/openwrt/openwrtsdk/
+                  make /package/rssi-polling/compile
