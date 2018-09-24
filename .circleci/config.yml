@@ -3,13 +3,16 @@ jobs:
   build:
     docker:
       - image: constantinschreiber/rssi-polling:v1
-    dependencies:
-            - git clone git@github.com:codeuniversity/triangl-customer-service.git
     steps:
       - checkout
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: Copy Package & Config to SDK
+          command: |
+                  mv project/rssi-polling /home/openwrt/openwrtsdk/package/
+                  mv project/.config /home/openwrt/openwrtsdk/
       - run:
-          name: Print the Current Time
-          command: date
+          name: Fix missing env time
+          command: sudo apt-get install time
+      - run:
+          name: Compile
+          command: make /home/openwrt/openwrtsdk/packages/rssi-polling/compile
