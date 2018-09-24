@@ -17,4 +17,4 @@ jobs:
           name: Compile
           command: |
                   cd /home/openwrt/openwrtsdk/
-                  make /package/rssi-polling/compile -j1 V=s
+                  make package/rssi-polling/compile -j1 V=s
