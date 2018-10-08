@@ -1,28 +1,30 @@
-workflows:
-  version: 2
-  filters: 
-    branches: 
-      only: 
-      - master
-
+version: 2
 jobs:
   build:
     docker:
-      - image: constantinschreiber/rssi-polling:v1
+    - image: constantinschreiber/rssi-polling:v1
     steps:
-      - checkout
-      - run:
-          name: Copy Package & Config to SDK
-          command: |
-                  mv /root/project/rssi-polling /home/openwrt/openwrtsdk/package/
-                  mv /root/project/.config /home/openwrt/openwrtsdk/
-      - run:
-          name: Fix missing env time
-          command: sudo apt-get install time
-      - run:
-          name: Compile
-          command: |
-                  cd /home/openwrt/openwrtsdk/
-                  make package/rssi-polling/compile -j1 V=s
-      - store_artifacts:
-              path: /home/openwrt/openwrtsdk/bin/packages/mipsel_24kc/base
+    - checkout
+    - run:
+        name: Copy Package & Config to SDK
+        command: |
+          mv /root/project/rssi-polling /home/openwrt/openwrtsdk/package/
+          mv /root/project/.config /home/openwrt/openwrtsdk/
+    - run:
+        name: Fix missing env time
+        command: sudo apt-get install time
+    - run:
+        name: Compile
+        command: |
+          cd /home/openwrt/openwrtsdk/
+          make package/rssi-polling/compile -j1 V=s
+    - store_artifacts:
+        path: /home/openwrt/openwrtsdk/bin/packages/mipsel_24kc/base
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build
+      filters:
+        branches:
+          only: master
