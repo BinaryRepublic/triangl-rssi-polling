@@ -21,6 +21,7 @@ jobs:
         path: /home/openwrt/openwrtsdk/bin/packages/mipsel_24kc/base
 workflows:
   version: 2
+  workflow:
     jobs:
     - build:
       filters:
