@@ -1,11 +1,12 @@
 # build helloworld executable when user executes "make"
-testcurl: testcurl.o
-	$(CC) $(LDFLAGS) testcurl.o -o testcurl
 
-testcurl.o: testcurl.c
-	$(CC) $(CFLAGS) -c -lcurl testcurl.c
+CC=gcc
+override CFLAGS := -lcurl $(CFLAGS)
+
+testcurl: 
+	$(CC) testcurl.c $(CFLAGS) -o testcurl
 
 # remove object files and executable when user executes "make clean"
 clean:
-	rm *.o testcurl
+	rm -f testcurl
 
