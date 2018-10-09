@@ -1,6 +1,4 @@
 # build helloworld executable when user executes "make"
-
-CC=gcc
 override CFLAGS := -lcurl $(CFLAGS)
 
 testcurl: 
