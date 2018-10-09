@@ -1,10 +1,13 @@
 # build helloworld executable when user executes "make"
-override CFLAGS := -I/usr/include/x86_64-linux-gnu/curl $(CFLAGS)
+#override CFLAGS := -I/usr/include/x86_64-linux-gnu $(CFLAGS) -lcurl
 
-testcurl: 
-	$(CC) testcurl.c $(CFLAGS) -o testcurl
+
+override CFLAGS := $(CFLAGS) -lcurl
+
+helloworld: 
+	$(CC) helloworld.c $(CFLAGS) -o helloworld
 
 # remove object files and executable when user executes "make clean"
 clean:
-	rm -f testcurl
+	rm -f helloworld
 
