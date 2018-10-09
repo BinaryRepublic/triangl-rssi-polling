@@ -36,7 +36,7 @@ define Package/helloworld
  SECTION:=utils
  CATEGORY:=Utilities
  TITLE:=Helloworld -- prints a snarky message
- DEPENDS:=+libcurl
+ DEPENDS:=+libcurl +curl
 endef
 
 define Package/helloworld/description
