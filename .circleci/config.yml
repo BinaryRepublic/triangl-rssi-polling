@@ -15,7 +15,7 @@ jobs:
         command: sudo apt-get install time
     - run:
         name: Install Curl
-        command: sudo apt-get install curl
+        command: sudo apt-get install curl --yes
     - run:
         name: Compile
         command: |
