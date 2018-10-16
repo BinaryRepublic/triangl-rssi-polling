@@ -22,8 +22,6 @@ int JSONcount = 0;
 
 int main (void)
 {
-    printf("mainstart\n");
-
     //Initialize output outputJSON
     outputJSON  = malloc(5000);
 
@@ -31,6 +29,8 @@ int main (void)
 
         printf("while start\n");
         if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 10)) {
+            printf("triggered sending\n");
+
             strcat(outputJSON, "]");
             printf("Sent %d JSON objects.\n", JSONcount);
             printf("Last processed timestamp: %f\n", lastProcessedTimestamp);
@@ -64,7 +64,9 @@ void mainLogic(void)
         printf("FAIL");
         exit(EXIT_FAILURE);
     }
-
+    
+    printf("mainlogic running \n");
+    
     //Read File line by line
     while ((read = getline(&line, &len, fp)) != -1)
     {
@@ -94,7 +96,7 @@ char *split_input(char *line)
 {
     int i = 0;
     // check for errors
-
+    printf("split running \n");
     char *tok = line, *end = line;
     while (tok != NULL)
     {
@@ -153,6 +155,7 @@ char *split_input(char *line)
         }
         tok = end;
     }
+    printf("successfully finished split while loop \n");
     return 0;
 }
 
@@ -260,6 +263,7 @@ void trim(char *str)
 
 int post(void)
 {
+    printf("postypost\n");
     CURL *curl;
     CURLcode res;
     struct curl_slist *header = NULL;
@@ -283,6 +287,7 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
+            printf("postypost 2\n");
 
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
