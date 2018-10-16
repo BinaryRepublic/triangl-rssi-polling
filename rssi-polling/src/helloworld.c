@@ -41,6 +41,7 @@ int main (void)
         }
         else
         {
+            printf("main else triggeredt\n");
             mainLogic();
         }
     }
