@@ -192,7 +192,7 @@ double date_to_double(char *str)
 
 double get_datetime(void)
 {
-    char curr_time[100];
+    char curr_time[15];
     curr_time[14] = '\0';
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
@@ -222,6 +222,7 @@ char	*itoa(int nb)
         nb_cpy /= 10;
         str[i++] = '\0';
     }
+    str[i] = '\0';
     while (i-- > 0)
     {
         str[i] = '0' + nb % 10;
