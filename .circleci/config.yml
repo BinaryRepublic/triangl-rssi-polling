@@ -14,6 +14,9 @@ jobs:
         name: Fix missing env time
         command: sudo apt-get install time
     - run:
+        name: Install Libcurl
+        command: sudo apt-get install curl libcurl4-gnutls-dev --yes
+    - run:
         name: Compile
         command: |
           cd /home/openwrt/openwrtsdk/
