@@ -229,6 +229,7 @@ char	*itoa(int nb)
     }
     //if (strcmp(str, "0") == 0) //Todo: Fix it
     //    return ("00");
+    str[i] = '\0';
     printf("itoa trigger nb: %s\n", str);
     return (str);
 }
