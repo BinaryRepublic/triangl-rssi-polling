@@ -294,14 +294,16 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
             printf("postypost 2\n");
-
+            printf("%s\n", outputJSON);
+            
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
         if(res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failedanield: %s\n",
                     curl_easy_strerror(res));
-
+        printf("SUCCESS CAPSLOCK\n");
+        exit; //nimm raus du spacken
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
