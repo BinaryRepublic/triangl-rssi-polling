@@ -194,9 +194,10 @@ double get_datetime(void)
 {
     char curr_time[15];
     curr_time[14] = '\0';
+    printf("weird shit ahead\n");
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-
+    printf("denk dir was lustiges aus \n");
     strcpy(curr_time,     itoa(tm.tm_year + 1900));
     strcpy(curr_time + 4, itoa(tm.tm_mon + 1));
     strcpy(curr_time + 6, itoa(tm.tm_mday));
