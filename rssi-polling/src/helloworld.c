@@ -194,7 +194,6 @@ double get_datetime(void)
 {
     char curr_time[15];
     curr_time[14] = '\0';
-    printf("weird shit ahead\n");
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     printf("denk dir was lustiges aus \n");
@@ -215,7 +214,6 @@ char	*itoa(int nb)
     char	*str;
     int		i;
     int		nb_cpy;
-
     i = 0;
     str = (char*)malloc(11);
     nb_cpy = nb;
@@ -231,6 +229,7 @@ char	*itoa(int nb)
     }
     //if (strcmp(str, "0") == 0) //Todo: Fix it
     //    return ("00");
+    printf("itoa trigger nb: %s\n", str);
     return (str);
 }
 
