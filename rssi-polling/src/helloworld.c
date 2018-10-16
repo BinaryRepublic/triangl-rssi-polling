@@ -54,12 +54,15 @@ void mainLogic(void)
     int is_station = 0;
     size_t len = 0;
     ssize_t read;
-
+    
     //Initialize to current time
     double current_time = get_datetime();
 
+    printf("past get_datetime");
+    
     //Read File
     fp = fopen("/pull-latest-ipk/test.csv", "r");
+    printf("%d", fp);
     if (fp == NULL)
     {
         printf("FAIL");
