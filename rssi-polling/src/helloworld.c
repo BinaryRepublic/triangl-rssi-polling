@@ -22,10 +22,14 @@ int JSONcount = 0;
 
 int main (void)
 {
+    printf("mainstart\n");
+
     //Initialize output outputJSON
     outputJSON  = malloc(5000);
 
     while(1) {
+
+        printf("while start\n");
         if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 10)) {
             strcat(outputJSON, "]");
             printf("Sent %d JSON objects.\n", JSONcount);
@@ -159,7 +163,7 @@ void removeJSONEntry(void)
     {
         i++;
     }
-    outputJSON[i - 37] = '\0'; //Hardcoded length of Station Mac string
+    outputJSON[i - 37] = '\0'; //Todo: Hardcoded length of Station Mac string
 }
 
 double date_to_double(char *str)
@@ -217,7 +221,7 @@ char	*itoa(int nb)
         str[i] = '0' + nb % 10;
         nb /= 10;
     }
-    //if (strcmp(str, "0") == 0)
+    //if (strcmp(str, "0") == 0) //Todo: Fix it
     //    return ("00");
     return (str);
 }
