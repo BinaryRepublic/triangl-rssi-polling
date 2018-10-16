@@ -192,7 +192,7 @@ double date_to_double(char *str)
 
 double get_datetime(void)
 {
-    char curr_time[15];
+    char curr_time[100];
     curr_time[14] = '\0';
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
