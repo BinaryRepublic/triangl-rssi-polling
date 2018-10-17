@@ -125,7 +125,7 @@ char *split_input(char *line)
         // 4 # packets
         // 5 BSSID (routerId)
         // 6 Probed ESSIDs
-        printf("%s%s%s", DEBUG_TRUE==3?"Current snippet in processing:\n":"",DEBUG_TRUE==3?tok:"",DEBUG_TRUE==3?"\n":"")
+        printf("%s%s%s", DEBUG_TRUE==3?"Current snippet in processing:\n":"",DEBUG_TRUE==3?tok:"",DEBUG_TRUE==3?"\n":"");
         switch(i) {
             case 0 :
                 if(JSONcount++ > 0)
