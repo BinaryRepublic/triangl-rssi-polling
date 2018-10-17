@@ -87,6 +87,7 @@ void mainLogic(void)
     //Read File line by line
     while ((read = getline(&line, &len, fp)) != -1)
     {
+        printf("%s%s", DEBUG_TRUE>=2?"Read line:":"",DEBUG_TRUE>=2?line:"");
         //skip lines untill clients get reached to set checkflag
         if(!strcmp("Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs\n", line))
         {
