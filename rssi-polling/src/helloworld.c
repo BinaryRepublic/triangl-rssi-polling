@@ -20,6 +20,8 @@ double lastProcessedTimestamp = 0;
 char *outputJSON;
 int JSONcount = 0;
 
+int DEBUG_TRUE = 1; // Set one to enable Debug informations
+
 double timestampTemp = 0;
 double timestampAfter = 0;
 
@@ -29,11 +31,12 @@ int main (void)
     //Initialize output outputJSON
     outputJSON  = malloc(5000);
     strcat(outputJSON, "[");
+    printf("%s", DEBUG_TRUE?"Scripted started successfully\n":"");
 
     while(1) {
 
         if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 7)) {
-            printf("triggered sending\n");
+            printf("%s", DEBUG_TRUE?"Conditions for sending fulfilled\n":"");
 
             strcat(outputJSON, "]\0");
             printf("Sent %d JSON objects.\n", JSONcount);
@@ -73,7 +76,7 @@ void mainLogic(void)
     //fp = fopen("/pull-latest-ipk/test.csv", "r");
     if (fp == NULL)
     {
-        printf("FAIL, empty file descriptor");
+        printf("%s", DEBUG_TRUE?"FAIL, empty file descriptor\n":"");
         sleep(2);
         //exit(EXIT_FAILURE);
         return;
@@ -94,7 +97,7 @@ void mainLogic(void)
         if(is_station)
             split_input(line);
     }
-
+    printf("%s%s", DEBUG_TRUE?"Creation of following JSON completed:\n":"",DEBUG_TRUE?outputJSON:"");
     //printf("%s", outputJSON);
 
     fclose(fp);
@@ -296,15 +299,15 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
-        printf("%s\n", outputJSON);
-
+        //printf("%s\n", outputJSON);
+        
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
         if(res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failedanield: %s\n",
                     curl_easy_strerror(res));
-        printf("SUCCESS CAPSLOCK\n");
+        printf("%s%d", DEBUG_TRUE?"JSON sended to server sucessfully, response-code: \n":"",res);
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
