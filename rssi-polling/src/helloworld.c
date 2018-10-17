@@ -20,7 +20,7 @@ double lastProcessedTimestamp = 0;
 char *outputJSON;
 int JSONcount = 0;
 
-int DEBUG_TRUE = 2; // Set one to enable Debug informations
+int DEBUG_TRUE = 3; // Set one to enable Debug informations
 
 double timestampTemp = 0;
 double timestampAfter = 0;
@@ -97,7 +97,7 @@ void mainLogic(void)
         if(is_station)
             split_input(line);
     }
-    printf("%s%s%s", DEBUG_TRUE==3?"Creation of following JSON completed:\n":"",DEBUG_TRUE==3?outputJSON:"",DEBUG_TRUE==2?"\n":"");
+    //printf("%s%s%s", DEBUG_TRUE==3?"Creation of following JSON completed:\n":"",DEBUG_TRUE==3?outputJSON:"",DEBUG_TRUE==3?"\n":"");
     //printf("%s", outputJSON);
 
     fclose(fp);
@@ -125,7 +125,7 @@ char *split_input(char *line)
         // 4 # packets
         // 5 BSSID (routerId)
         // 6 Probed ESSIDs
-
+        printf("%s%s%s", DEBUG_TRUE==3?"Current snippet in processing:\n":"",DEBUG_TRUE==3?tok:"",DEBUG_TRUE==3?"\n":"")
         switch(i) {
             case 0 :
                 if(JSONcount++ > 0)
