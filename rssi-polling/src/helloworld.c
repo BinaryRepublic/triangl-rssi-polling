@@ -32,7 +32,7 @@ int main (void)
 
     while(1) {
 
-        if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 10)) {
+        if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 7)) {
             printf("triggered sending\n");
 
             strcat(outputJSON, "]\0");
