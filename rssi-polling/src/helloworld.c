@@ -90,6 +90,7 @@ void mainLogic(void)
         //skip lines untill clients get reached to set checkflag
         if(!strcmp("Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs\n", line))
         {
+            printf("%s", DEBUG_TRUE>=2?"Found Stations\n":"");
             is_station = 1;
             continue;
         }
@@ -133,7 +134,7 @@ char *split_input(char *line)
                 strcat(outputJSON, "{\n\"deviceId\" : \"");
                 strcat(outputJSON, tok);
                 strcat(outputJSON, "\",");
-                printf("%s%s%s", DEBUG_TRUE==2?"current JSON:\n":"",DEBUG_TRUE==2?outputJSON:"",DEBUG_TRUE==2?"\n":"");
+                printf("%s%s%s", DEBUG_TRUE>=2?"current JSON:\n":"",DEBUG_TRUE>=2?outputJSON:"",DEBUG_TRUE>=2?"\n":"");
                 i++;
                 break;
             case 2:
@@ -142,7 +143,7 @@ char *split_input(char *line)
                 // Validate if newer last seen timestamp than last processed
                 if(date_to_double(tok) <= timestampAfter)
                 {
-                    printf("%s%s%s", DEBUG_TRUE==2?"removed JSON:\n":"",DEBUG_TRUE==2?(outputJSON-36):"",DEBUG_TRUE==2?"\n":"");
+                    printf("%s%s%s", DEBUG_TRUE>=2?"removed JSON:\n":"",DEBUG_TRUE>=2?(outputJSON-36):"",DEBUG_TRUE>=2?"\n":"");
                     removeJSONEntry();
                     i += 5;
                     JSONcount--;
@@ -302,7 +303,7 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
         printf("%s\n", outputJSON);
-        printf("%s%s%s", DEBUG_TRUE==2?"Following JSON posted:\n":"",DEBUG_TRUE==2?outputJSON:"",DEBUG_TRUE==2?"\n":"");
+        printf("%s%s%s", DEBUG_TRUE>=2?"Following JSON posted:\n":"",DEBUG_TRUE>=2?outputJSON:"",DEBUG_TRUE>=2?"\n":"");
         
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
