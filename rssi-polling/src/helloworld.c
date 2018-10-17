@@ -69,7 +69,7 @@ void mainLogic(void)
 
 
     //Read File
-    fp = fopen("/triangl-package-updater/test.csv", "r");
+    fp = fopen("/triangl-package-updater/test.csv-01.csv", "r");
     //fp = fopen("/pull-latest-ipk/test.csv", "r");
     if (fp == NULL)
     {
