@@ -20,7 +20,12 @@ double lastProcessedTimestamp = 0;
 char *outputJSON;
 int JSONcount = 0;
 
-int DEBUG_TRUE = 3; // Set one to enable Debug informations
+int DEBUG_TRUE = 3; // Set Debuglevels
+    // 0 : No messages
+    // 1 : Only success and critical error messages
+    // 2 : important iterative messages
+    // 3 : spammy iterative messages
+    // 4 : sub-loop iteration messages (for critical debugging only)
 
 double timestampTemp = 0;
 double timestampAfter = 0;
@@ -36,11 +41,13 @@ int main (void)
     while(1) {
 
         if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 7)) {
-            printf("%s", DEBUG_TRUE?"Conditions for sending fulfilled\n":"");
+            printf("%s", DEBUG_TRUE>=2?"Conditions for sending fulfilled\n":"");
 
             strcat(outputJSON, "]\0");
-            printf("Sent %d JSON objects.\n", JSONcount);
-            printf("Last processed timestamp: %f\n", lastProcessedTimestamp);
+            if (DEBUG_TRUE){
+                printf("Sent %d JSON objects.\n", JSONcount);
+                printf("Last processed timestamp: %f\n", lastProcessedTimestamp);
+            }
             lastProcessedTimestamp = get_datetime();
             post();
             free(outputJSON);
@@ -87,7 +94,7 @@ void mainLogic(void)
     //Read File line by line
     while ((read = getline(&line, &len, fp)) != -1)
     {
-        printf("%s%s", DEBUG_TRUE>=2?"Read line:":"",DEBUG_TRUE>=2?line:"");
+        printf("%s%s", DEBUG_TRUE==4?"Read line:":"",DEBUG_TRUE==4?line:"");
         //skip lines untill clients get reached to set checkflag
         if(0 > strcmp("Station MAC", line))
         {
@@ -99,7 +106,7 @@ void mainLogic(void)
         if(is_station)
             split_input(line);
     }
-    //printf("%s%s%s", DEBUG_TRUE==3?"Creation of following JSON completed:\n":"",DEBUG_TRUE==3?outputJSON:"",DEBUG_TRUE==3?"\n":"");
+    printf("%s%s%s", DEBUG_TRUE>=3?"Creation of following JSON completed:\n":"",DEBUG_TRUE>=3?outputJSON:"",DEBUG_TRUE>=3?"\n":"");
     //printf("%s", outputJSON);
 
     fclose(fp);
@@ -127,7 +134,7 @@ char *split_input(char *line)
         // 4 # packets
         // 5 BSSID (routerId)
         // 6 Probed ESSIDs
-        printf("%s%s%s", DEBUG_TRUE==3?"Current snippet in processing:\n":"",DEBUG_TRUE==3?tok:"",DEBUG_TRUE==3?"\n":"");
+        printf("%s%s%s", DEBUG_TRUE==4?"Current snippet in processing:\n":"",DEBUG_TRUE>=3?tok:"",DEBUG_TRUE==4?"\n":"");
         switch(i) {
             case 0 :
                 if(JSONcount++ > 0)
@@ -135,7 +142,7 @@ char *split_input(char *line)
                 strcat(outputJSON, "{\n\"deviceId\" : \"");
                 strcat(outputJSON, tok);
                 strcat(outputJSON, "\",");
-                printf("%s%s%s", DEBUG_TRUE>=2?"current JSON:\n":"",DEBUG_TRUE>=2?outputJSON:"",DEBUG_TRUE>=2?"\n":"");
+                printf("%s%s%s", DEBUG_TRUE==4?"current JSON:\n":"",DEBUG_TRUE==4?outputJSON:"",DEBUG_TRUE>=2?"\n":"");
                 i++;
                 break;
             case 2:
@@ -144,7 +151,6 @@ char *split_input(char *line)
                 // Validate if newer last seen timestamp than last processed
                 if(date_to_double(tok) <= timestampAfter)
                 {
-                    printf("%s%s%s", DEBUG_TRUE>=2?"removed JSON:\n":"",DEBUG_TRUE>=2?(outputJSON-36):"",DEBUG_TRUE>=2?"\n":"");
                     removeJSONEntry();
                     i += 5;
                     JSONcount--;
@@ -184,6 +190,7 @@ void removeJSONEntry(void)
         i++;
     }
     outputJSON[i - (i == 36 ? 35 : 37)] = '\0'; //Todo: Hardcoded length of Station Mac string
+    printf("%s%s%s", DEBUG_TRUE>=3?"**Removed JSON:**   ":"",DEBUG_TRUE>=3?(outputJSON-(i == 36 ? 35 : 37)):"",DEBUG_TRUE>=3?"\n":"");
 }
 
 double date_to_double(char *str)
@@ -216,6 +223,7 @@ double get_datetime(void)
     strcpy(curr_time + 10, itoa(tm.tm_min));
     strcpy(curr_time + 12, itoa(tm.tm_sec));
 
+    printf("%s",DEBUG_TRUE==4?curr_time:"");
     return (double) atof(curr_time);
 }
 
@@ -242,7 +250,10 @@ char	*itoa(int nb)
     }
     //if (strcmp(str, "0") == 0) //Todo: Fix it
     //    return ("00");
-    str[4] = '\0';
+
+    // str[4] = '\0';
+    if (DEBUG_TRUE == 4)
+        printf("itoa STR out: %s", str);
     return (str);
 }
 
@@ -303,8 +314,7 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
-        printf("%s\n", outputJSON);
-        printf("%s%s%s", DEBUG_TRUE>=2?"Following JSON posted:\n":"",DEBUG_TRUE>=2?outputJSON:"",DEBUG_TRUE>=2?"\n":"");
+        printf("%s%s%s", DEBUG_TRUE?"Following JSON posted:\n":"",DEBUG_TRUE?outputJSON:"",DEBUG_TRUE?"\n":"");
         
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
@@ -312,7 +322,8 @@ int post(void)
         if(res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failedanield: %s\n",
                     curl_easy_strerror(res));
-        printf("%s%d", DEBUG_TRUE?"JSON sended to server sucessfully, response-code: \n":"",res);
+        if (DEBUG_TRUE == 2)
+            printf("JSON sended to server sucessfully, response-code: %d\n",res);
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
