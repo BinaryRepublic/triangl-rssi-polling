@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <unistd.h>
 #include <curl/curl.h> //just for curl
 
 double get_datetime(void);
@@ -19,30 +20,38 @@ double lastProcessedTimestamp = 0;
 char *outputJSON;
 int JSONcount = 0;
 
+double timestampTemp = 0;
+double timestampAfter = 0;
+
 
 int main (void)
 {
     //Initialize output outputJSON
     outputJSON  = malloc(5000);
+    strcat(outputJSON, "[");
 
     while(1) {
 
-        printf("while start\n");
         if (JSONcount != 0 && (get_datetime() >= lastProcessedTimestamp + 10)) {
             printf("triggered sending\n");
 
-            strcat(outputJSON, "]");
+            strcat(outputJSON, "]\0");
             printf("Sent %d JSON objects.\n", JSONcount);
             printf("Last processed timestamp: %f\n", lastProcessedTimestamp);
             lastProcessedTimestamp = get_datetime();
             post();
             free(outputJSON);
             outputJSON = malloc(5000);
+            for(int i = 0; i < 5000; i++)
+                outputJSON[i] = '\0';
+            strcat(outputJSON, "[");
+            JSONcount = 0;
         }
         else
         {
-            printf("main else triggeredt\n");
+            timestampTemp = 0;
             mainLogic();
+            timestampAfter = timestampTemp;
         }
     }
 }
@@ -54,23 +63,24 @@ void mainLogic(void)
     int is_station = 0;
     size_t len = 0;
     ssize_t read;
-    
+
     //Initialize to current time
     double current_time = get_datetime();
 
-    printf("past get_datetime");
-    
+
     //Read File
-    fp = fopen("/pull-latest-ipk/test.csv", "r");
-    printf("%d", fp);
+    fp = fopen("/Users/constantin/CLionProjects/untitled/test.csv", "r");
+    //fp = fopen("/pull-latest-ipk/test.csv", "r");
     if (fp == NULL)
     {
-        printf("FAIL");
-        exit(EXIT_FAILURE);
+        printf("FAIL, empty file descriptor");
+        sleep(2);
+        //exit(EXIT_FAILURE);
+        return;
     }
-    
-    printf("mainlogic running \n");
-    
+
+   // printf("mainlogic running \n");
+
     //Read File line by line
     while ((read = getline(&line, &len, fp)) != -1)
     {
@@ -82,9 +92,7 @@ void mainLogic(void)
         }
 
         if(is_station)
-        {
             split_input(line);
-        }
     }
 
     //printf("%s", outputJSON);
@@ -100,7 +108,6 @@ char *split_input(char *line)
 {
     int i = 0;
     // check for errors
-    printf("split running \n");
     char *tok = line, *end = line;
     while (tok != NULL)
     {
@@ -118,8 +125,6 @@ char *split_input(char *line)
 
         switch(i) {
             case 0 :
-                if(JSONcount == 0)
-                    strcat(outputJSON, "[");
                 if(JSONcount++ > 0)
                     strcat(outputJSON, ",\n");
                 strcat(outputJSON, "{\n\"deviceId\" : \"");
@@ -128,11 +133,14 @@ char *split_input(char *line)
                 i++;
                 break;
             case 2:
+                if(date_to_double(tok) > timestampTemp)
+                    timestampTemp = date_to_double(tok);
                 // Validate if newer last seen timestamp than last processed
-                if(date_to_double(tok) <= lastProcessedTimestamp)
+                if(date_to_double(tok) <= timestampAfter)
                 {
                     removeJSONEntry();
                     i += 5;
+                    JSONcount--;
                     break;
                 }
                 trim(tok);
@@ -159,18 +167,16 @@ char *split_input(char *line)
         }
         tok = end;
     }
-    printf("successfully finished split while loop \n");
     return 0;
 }
 
 void removeJSONEntry(void)
 {
     int i = 0;
-    while(outputJSON[i] != '\0')
-    {
+    while(outputJSON[i] != '\0') {
         i++;
     }
-    outputJSON[i - 37] = '\0'; //Todo: Hardcoded length of Station Mac string
+    outputJSON[i - (i == 36 ? 35 : 37)] = '\0'; //Todo: Hardcoded length of Station Mac string
 }
 
 double date_to_double(char *str)
@@ -196,7 +202,6 @@ double get_datetime(void)
     curr_time[14] = '\0';
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    printf("denk dir was lustiges aus \n");
     strcpy(curr_time,     itoa(tm.tm_year + 1900));
     strcpy(curr_time + 4, itoa(tm.tm_mon + 1));
     strcpy(curr_time + 6, itoa(tm.tm_mday));
@@ -231,7 +236,6 @@ char	*itoa(int nb)
     //if (strcmp(str, "0") == 0) //Todo: Fix it
     //    return ("00");
     str[4] = '\0';
-    printf("itoa trigger nb: %s\n", str);
     return (str);
 }
 
@@ -269,7 +273,6 @@ void trim(char *str)
 
 int post(void)
 {
-    printf("postypost\n");
     CURL *curl;
     CURLcode res;
     struct curl_slist *header = NULL;
@@ -293,9 +296,8 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
-            printf("postypost 2\n");
-            printf("%s\n", outputJSON);
-            
+        printf("%s\n", outputJSON);
+
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
@@ -303,7 +305,6 @@ int post(void)
             fprintf(stderr, "curl_easy_perform() failedanield: %s\n",
                     curl_easy_strerror(res));
         printf("SUCCESS CAPSLOCK\n");
-        exit; //nimm raus du spacken
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
