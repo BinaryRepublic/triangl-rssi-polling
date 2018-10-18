@@ -95,9 +95,8 @@ void mainLogic(void)
     while ((read = getline(&line, &len, fp)) != -1)
     {
         printf("%s%s", DEBUG_TRUE==4?"Read line:":"",DEBUG_TRUE==4?line:"");
-        printf("%d\n",strcmp("Station MAC", line));
         //skip lines untill clients get reached to set checkflag
-        if(-108 == strcmp("Station MAC", line))
+        if(-44 == strcmp("Station MAC", line))
         {
             printf("%s", DEBUG_TRUE>=2?"Found Stations\n":"");
             is_station = 1;
@@ -107,7 +106,6 @@ void mainLogic(void)
         if(is_station)
             split_input(line);
     }
-    exit(1);
     printf("%s%s%s", DEBUG_TRUE>=3?"Creation of following JSON completed:\n":"",DEBUG_TRUE>=3?outputJSON:"",DEBUG_TRUE>=3?"\n":"");
     //printf("%s", outputJSON);
 
