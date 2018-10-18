@@ -41,6 +41,7 @@ int main (void)
     }
     getline(&MAC, &len, mac_fd);
     printf("%s", MAC);
+    fclose(mac_fd);
 
     while(1) {
 
