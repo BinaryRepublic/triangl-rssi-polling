@@ -179,6 +179,10 @@ char *split_input(char *line)
                 printf("case 5\n");
                 RemoveSpaces(tok);
                 strcat(outputJSON, "\n\"routerId\" : \"");
+                strcat(outputJSON, MAC);
+                strcat(outputJSON, "\",");
+                
+                strcat(outputJSON, "\n\"associatedAP\" : \"");
                 strcat(outputJSON, tok);
                 strcat(outputJSON, "\"\n}");
                 i++;
