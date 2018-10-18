@@ -19,6 +19,7 @@ void mainLogic(void);
 double lastProcessedTimestamp = 0;
 char *outputJSON;
 int JSONcount = 0;
+char *MAC=NULL;
 
 double timestampTemp = 0;
 double timestampAfter = 0;
@@ -29,6 +30,18 @@ int main (void)
     //Initialize output outputJSON
     outputJSON  = malloc(5000);
     strcat(outputJSON, "[");
+    FILE *mac_fd = fopen("/triangl-package-updater/my_mac", "r");
+    size_t len = 0;
+    if (mac_fd == NULL)
+    {
+        printf("FAIL, empty file descriptor");
+        sleep(2);
+        //exit(EXIT_FAILURE);
+        return(1);
+    }
+    getline(&MAC, &len, mac_fd);
+    printf("%s", MAC);
+    exit(1);
 
     while(1) {
 
@@ -55,7 +68,6 @@ int main (void)
         }
     }
 }
-
 void mainLogic(void)
 {
     FILE * fp;
