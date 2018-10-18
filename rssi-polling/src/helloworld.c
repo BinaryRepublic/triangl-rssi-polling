@@ -197,7 +197,7 @@ double date_to_double(char *str)
     num[14] = '\0';
     int i = 0;
     int j = 0;
-    int length = 19;
+    int length = 13;
     while(i <= length)
     {
         if (str[i] != '-' && str[i] != ':' && str[i] != ' ')
