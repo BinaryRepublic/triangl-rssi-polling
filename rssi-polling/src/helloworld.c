@@ -125,6 +125,10 @@ char *split_input(char *line)
 
         switch(i) {
             case 0 :
+                if (strlen(tok) != 17){
+                    i += 8;
+                    break;
+                }
                 if(JSONcount++ > 0)
                     strcat(outputJSON, ",\n");
                 strcat(outputJSON, "{\n\"deviceId\" : \"");
