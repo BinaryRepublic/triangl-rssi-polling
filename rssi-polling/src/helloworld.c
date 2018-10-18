@@ -96,7 +96,7 @@ void mainLogic(void)
     {
         printf("%s%s", DEBUG_TRUE==4?"Read line:":"",DEBUG_TRUE==4?line:"");
         //skip lines untill clients get reached to set checkflag
-        if(0 > strcmp("Station MAC", line))
+        if(-108 == strcmp("Station MAC", line))
         {
             printf("%s", DEBUG_TRUE>=2?"Found Stations\n":"");
             is_station = 1;
