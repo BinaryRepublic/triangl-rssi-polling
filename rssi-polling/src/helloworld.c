@@ -137,6 +137,8 @@ char *split_input(char *line)
         printf("%s%s%s", DEBUG_TRUE==4?"Current snippet in processing:\n":"",DEBUG_TRUE>=3?tok:"",DEBUG_TRUE==4?"\n":"");
         switch(i) {
             case 0 :
+                if (tok == "\n")
+                    break;
                 if(JSONcount++ > 0)
                     strcat(outputJSON, ",\n");
                 strcat(outputJSON, "{\n\"deviceId\" : \"");
