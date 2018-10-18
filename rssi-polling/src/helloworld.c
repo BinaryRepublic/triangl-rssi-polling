@@ -69,17 +69,16 @@ void mainLogic(void)
 
 
     //Read File
+    printf("opening csv \n");
     fp = fopen("/triangl-package-updater/test.csv-01.csv", "r");
     //fp = fopen("/pull-latest-ipk/test.csv", "r");
     if (fp == NULL)
     {
-        printf("FAIL, empty file descriptor");
+        printf("FAIL, empty file descriptor\n");
         sleep(2);
         //exit(EXIT_FAILURE);
         return;
     }
-
-   // printf("mainlogic running \n");
 
     //Read File line by line
     while ((read = getline(&line, &len, fp)) != -1)
@@ -87,6 +86,7 @@ void mainLogic(void)
         //skip lines untill clients get reached to set checkflag
         if(-44 == strcmp("Station MAC", line))
         {
+            printf("Set is_Station flag\n");
             is_station = 1;
             continue;
         }
@@ -106,6 +106,7 @@ void mainLogic(void)
 
 char *split_input(char *line)
 {
+    printf("split input triggered\n");
     int i = 0;
     // check for errors
     char *tok = line, *end = line;
@@ -125,6 +126,7 @@ char *split_input(char *line)
 
         switch(i) {
             case 0 :
+                printf("case 0\n");
                 if (strlen(tok) != 17){
                     i += 8;
                     break;
@@ -137,6 +139,7 @@ char *split_input(char *line)
                 i++;
                 break;
             case 2:
+                printf("case 2\n");
                 if(date_to_double(tok) > timestampTemp)
                     timestampTemp = date_to_double(tok);
                 // Validate if newer last seen timestamp than last processed
@@ -154,12 +157,14 @@ char *split_input(char *line)
                 i++;
                 break;
             case 3 :
+                printf("case 3\n");
                 strcat(outputJSON, "\n\"signalStrength\" : ");
                 strcat(outputJSON, tok);
                 strcat(outputJSON, ",");
                 i++;
                 break;
             case 5 :
+                printf("case 5\n");
                 RemoveSpaces(tok);
                 strcat(outputJSON, "\n\"routerId\" : \"");
                 strcat(outputJSON, tok);
@@ -167,6 +172,7 @@ char *split_input(char *line)
                 i++;
                 break;
             default :
+                printf("case default\n");
                 i++;
         }
         tok = end;
@@ -176,6 +182,7 @@ char *split_input(char *line)
 
 void removeJSONEntry(void)
 {
+    printf("removeJSONEntry \n");
     int i = 0;
     while(outputJSON[i] != '\0') {
         i++;
@@ -185,6 +192,7 @@ void removeJSONEntry(void)
 
 double date_to_double(char *str)
 {
+    printf("date_to_double triggr \n");
     char num[15];
     num[14] = '\0';
     int i = 0;
@@ -202,6 +210,7 @@ double date_to_double(char *str)
 
 double get_datetime(void)
 {
+    printf("get_datetime triggr \n");
     char curr_time[15];
     curr_time[14] = '\0';
     time_t t = time(NULL);
@@ -220,6 +229,7 @@ double get_datetime(void)
 //Problem when clock hits zero at the end
 char	*itoa(int nb)
 {
+    printf("itoa triggr \n");
     char	*str;
     int		i;
     int		nb_cpy;
@@ -245,6 +255,7 @@ char	*itoa(int nb)
 
 void RemoveSpaces(char* source)
 {
+    printf("itoa triggr \n");
     char* i = source;
     char* j = source;
     while(*j != 0)
