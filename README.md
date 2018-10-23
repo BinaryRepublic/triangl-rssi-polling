@@ -11,6 +11,7 @@ OpenWRT Packet for polling clients and logging the RSSI to corresponding clients
 - Add libcurl to image
     - install libcurl into openwrtsdk
     - add updated openwrtsdk to docker image
+- Add real logging to the scripts
 
 ## TODO-Package:
 - Rename helloworld to something more fitting ...
