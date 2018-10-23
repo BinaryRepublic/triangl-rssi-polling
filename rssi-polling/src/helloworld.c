@@ -4,7 +4,7 @@
 #include <time.h>
 #include <ctype.h>
 #include <unistd.h>
-#include <curl/curl.h> //just for curl
+#include <curl/curl.h>
 
 double get_datetime(void);
 char	*itoa(int nb);
@@ -34,7 +34,7 @@ int main (void)
     size_t len = 0;
     if (mac_fd == NULL)
     {
-        printf("FAIL, empty file descriptor");
+        printf("FAIL, empty file descriptor. Is there a file with the mac address");
         sleep(2);
         //exit(EXIT_FAILURE);
         return(1);
@@ -53,8 +53,6 @@ int main (void)
             printf("Last processed timestamp: %f\n", lastProcessedTimestamp);
             lastProcessedTimestamp = get_datetime();
             post();
-            free(outputJSON);
-            outputJSON = malloc(5000);
             for(int i = 0; i < 5000; i++)
                 outputJSON[i] = '\0';
             strcat(outputJSON, "[");
@@ -74,11 +72,9 @@ void mainLogic(void)
     char * line = NULL;
     int is_station = 0;
     size_t len = 0;
-    ssize_t read;
 
     //Initialize to current time
     double current_time = get_datetime();
-
 
     //Read File
     printf("opening csv \n");
@@ -93,7 +89,7 @@ void mainLogic(void)
     }
 
     //Read File line by line
-    while ((read = getline(&line, &len, fp)) != -1)
+    while ((getline(&line, &len, fp)) > 0)
     {
         //skip lines untill clients get reached to set checkflag
         if(-44 == strcmp("Station MAC", line))
@@ -231,12 +227,24 @@ double get_datetime(void)
     curr_time[14] = '\0';
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    strcpy(curr_time,     itoa(tm.tm_year + 1900));
-    strcpy(curr_time + 4, itoa(tm.tm_mon + 1));
-    strcpy(curr_time + 6, itoa(tm.tm_mday));
-    strcpy(curr_time + 8, itoa(tm.tm_hour));
-    strcpy(curr_time + 10, itoa(tm.tm_min));
-    strcpy(curr_time + 12, itoa(tm.tm_sec));
+    char *tm_year = itoa(tm.tm_year + 1900);
+    char *tm_month = itoa(tm.tm_mon + 1);
+    char *tm_mday = itoa(tm.tm_mday);
+    char *tm_hour = itoa(tm.tm_hour);
+    char *tm_min = itoa(tm.tm_min);
+    char *tm_sec =itoa(tm.tm_sec);
+    strcpy(curr_time, tm_year);
+    strcpy(curr_time + 4, tm_month);
+    strcpy(curr_time + 6, tm_mday);
+    strcpy(curr_time + 8, tm_hour);
+    strcpy(curr_time + 10, tm_min);
+    strcpy(curr_time + 12, tm_sec);
+    free(tm_year);
+    free(tm_month);
+    free(tm_mday);
+    free(tm_hour);
+    free(tm_min);
+    free(tm_sec);
 
     return (double) atof(curr_time);
 }
