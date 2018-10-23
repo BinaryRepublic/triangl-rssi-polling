@@ -15,6 +15,7 @@ void removeJSONEntry(void);
 int post(void);
 void trim(char *str);
 void mainLogic(void);
+char * get_time(void);
 
 double lastProcessedTimestamp = 0;
 char *outputJSON;
@@ -34,7 +35,7 @@ int main (void)
     size_t len = 0;
     if (mac_fd == NULL)
     {
-        printf("FAIL, empty file descriptor. Is there a file with the mac address");
+        fprintf(stderr, "%s - FAIL, empty file descriptor (my_mac)\n", get_time());
         sleep(2);
         //exit(EXIT_FAILURE);
         return(1);
@@ -84,7 +85,7 @@ void mainLogic(void)
     //fp = fopen("/pull-latest-ipk/test.csv", "r");
     if (fp == NULL)
     {
-        printf("FAIL, empty file descriptor\n");
+        fprintf(stderr, "%s- FAIL, empty file descriptor (test.csv-01.csv)\n", get_time());
         sleep(2);
         //exit(EXIT_FAILURE);
         return;
@@ -320,6 +321,8 @@ int post(void)
     header = curl_slist_append(header, "Content-Type: application/json");
     curl_slist_append(header, "charsets: utf-8");
 
+    
+
     /* In windows, this will init the winsock stuff */
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -337,18 +340,28 @@ int post(void)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, outputJSON);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcrp/0.1");
-        printf("%s\n", outputJSON);
+        fprintf(stderr, "%s\n", outputJSON);
 
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
         if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failedanield: %s\n",
+            fprintf(stderr, "%s - curl_easy_perform() failed, Error message : %s\n", get_time(),
                     curl_easy_strerror(res));
-        printf("SUCCESS CAPSLOCK\n");
+        
+        fprintf(stderr, "%s - JSON send sucessfully\n", get_time());
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
     return 0;
+}
+
+char * get_time(void)
+{
+    time_t rawtime;
+    struct tm * timeinfo;
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    return (asctime(timeinfo));
 }
