@@ -37,7 +37,6 @@ int main (void)
     {
         fprintf(stderr, "%s - FAIL, empty file descriptor (my_mac)\n", get_time());
         sleep(2);
-        //exit(EXIT_FAILURE);
         return(1);
     }
     getline(&MAC, &len, mac_fd);
@@ -212,7 +211,7 @@ double date_to_double(char *str)
     num[14] = '\0';
     int i = 0;
     int j = 0;
-    int length = 13;
+    int length = strlen(str);
     while(i <= length)
     {
         if (str[i] != '-' && str[i] != ':' && str[i] != ' ')
