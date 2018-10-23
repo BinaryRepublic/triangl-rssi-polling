@@ -40,6 +40,8 @@ int main (void)
         return(1);
     }
     getline(&MAC, &len, mac_fd);
+    len = strlen(MAC);
+    MAC[len-1] = MAC[len-1] == '\n' ? '\0' : MAC[len-1];
     printf("%s", MAC);
     fclose(mac_fd);
 
