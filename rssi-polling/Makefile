@@ -1,5 +1,5 @@
 ##############################################
-# OpenWrt Makefile for rssi_polling program
+# OpenWrt Makefile for rssi-polling program
 #
 #
 # Most of the variables used here are defined in
@@ -19,7 +19,7 @@
 include $(TOPDIR)/rules.mk
 
 # Name and release number of this package
-PKG_NAME:=rssi_polling
+PKG_NAME:=rssi-polling
 PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
@@ -32,14 +32,14 @@ include $(INCLUDE_DIR)/package.mk
 
 # Specify package information for this program.
 # The variables defined here should be self explanatory.
-define Package/rssi_polling
+define Package/rssi-polling
  SECTION:=utils
  CATEGORY:=Utilities
- TITLE:=rssi_polling -- Forwards catched request to the Backend
+ TITLE:=rssi-polling -- Forwards catched request to the Backend
  DEPENDS:=+libcurl
 endef
 
-define Package/rssi_polling/description
+define Package/rssi-polling/description
  This programs reads and evaluated the requests catched by airodump.
  During this process it generates a json, which is forwarded to the
  backend using http POST-requests.
@@ -70,14 +70,13 @@ endef
 # directory if it does not already exist.  Likewise $(INSTALL_BIN) contains the
 # command to copy the binary file from its current location (in our case the build
 # directory) to the install directory.
-define Package/rssi_polling/install
+define Package/rssi-polling/install
 	$(INSTALL_DIR) $(1)/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rssi_polling $(1)/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rssi-polling $(1)/bin/
 endef
 
 # This line executes the necessary commands to compile our program.
 # The above define directives specify all the information needed, but this
 # line calls BuildPackage which in turn actually uses this information to
 # build a package.
-$(eval $(call BuildPackage,rssi_polling))
-
+$(eval $(call BuildPackage,rssi-polling))

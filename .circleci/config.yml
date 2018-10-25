@@ -24,7 +24,7 @@ jobs:
           ./scripts/feeds install libcurl
           make package/rssi-polling/compile -j1 V=s
     - store_artifacts:
-        path: /home/openwrt/openwrtsdk/bin/packages/mipsel_24kc/base/rssi_polling_1.0.0-1_mipsel_24kc.ipk
+        path: /home/openwrt/openwrtsdk/bin/packages/mipsel_24kc/base/rssi-polling_1.0.0-1_mipsel_24kc.ipk
 workflows:
   version: 2
   workflow:
