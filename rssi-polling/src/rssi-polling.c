@@ -9,7 +9,6 @@
 #include "json.c"
 #include <curl/curl.h>
 
-
 char *read_mac_address(char *path);
 char **split_trim_str(char *str, char delim);
 void free_split(char **split);
@@ -17,6 +16,7 @@ char *station_to_json(char **station_data);
 time_t get_timestamp(char * str);
 void post(char *json);
 char *evaluate_csv(char *path);
+int split_length(char **split);
 
 int last_upload = 0;
 char *mac_addr = NULL;
@@ -80,7 +80,7 @@ char *evaluate_csv(char *path)
             char **station_data = split_trim_str(line, ',');
             int last_seen = get_timestamp(station_data[2]);
             max_timestamp = last_seen > max_timestamp ? last_seen : max_timestamp;            
-            if(last_seen > last_upload)
+            if(last_seen > last_upload && split_length(station_data) >= 6)
                 json_array_add_json(json_arr, station_to_json(station_data));
             free_split(station_data);
         }
@@ -178,6 +178,14 @@ void free_split(char **split)
     while(split[i] != NULL)
         free(split[i++]);
     free(split);
+}
+
+int split_length(char **split)
+{
+    int i = 0;
+    while(split[i] != NULL)
+        i++;
+    return (i);
 }
 
 void post(char *json)
