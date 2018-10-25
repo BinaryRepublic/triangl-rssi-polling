@@ -69,8 +69,8 @@ char *evaluate_csv(char *path)
     char *json_arr = create_json_array(65536);
     FILE *csv = fopen(path, "r");
 
-    if (csv == NULL)
-        return NULL;
+    if (csv != NULL)
+    {
     while(getline(&line, &len, csv) > 0)
     {
         if (-44 == strcmp("Station MAC", line))
@@ -84,6 +84,7 @@ char *evaluate_csv(char *path)
                 json_array_add_json(json_arr, station_to_json(station_data));
             free_split(station_data);
         }
+    }
     }
     last_upload = max_timestamp;
     free(line);
@@ -107,7 +108,7 @@ time_t get_timestamp(char * str)
 
 char *station_to_json(char **station_data)
 {
-    char *json = create_json(200);
+    char *json = create_json(240);
 
     json_add_str(json, "deviceId", station_data[0]);
     json_add_str(json,"timestampString",station_data[2]);
