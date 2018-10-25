@@ -1,5 +1,5 @@
 ##############################################
-# OpenWrt Makefile for helloworld program
+# OpenWrt Makefile for rssi_polling program
 #
 #
 # Most of the variables used here are defined in
@@ -19,7 +19,7 @@
 include $(TOPDIR)/rules.mk
 
 # Name and release number of this package
-PKG_NAME:=helloworld
+PKG_NAME:=rssi_polling
 PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
@@ -32,17 +32,17 @@ include $(INCLUDE_DIR)/package.mk
 
 # Specify package information for this program.
 # The variables defined here should be self explanatory.
-define Package/helloworld
+define Package/rssi_polling
  SECTION:=utils
  CATEGORY:=Utilities
- TITLE:=Helloworld -- prints a snarky message
+ TITLE:=rssi_polling -- Forwards catched request to the Backend
  DEPENDS:=+libcurl
 endef
 
-define Package/helloworld/description
- If you can't figure out what this program does,
- you're probably brain-dead and need immediate
- medical attention.
+define Package/rssi_polling/description
+ This programs reads and evaluated the requests catched by airodump.
+ During this process it generates a json, which is forwarded to the
+ backend using http POST-requests.
 endef
 
 # Specify what needs to be done to prepare for building the package.
@@ -70,14 +70,14 @@ endef
 # directory if it does not already exist.  Likewise $(INSTALL_BIN) contains the
 # command to copy the binary file from its current location (in our case the build
 # directory) to the install directory.
-define Package/helloworld/install
+define Package/rssi_polling/install
 	$(INSTALL_DIR) $(1)/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/helloworld $(1)/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rssi_polling $(1)/bin/
 endef
 
 # This line executes the necessary commands to compile our program.
 # The above define directives specify all the information needed, but this
 # line calls BuildPackage which in turn actually uses this information to
 # build a package.
-$(eval $(call BuildPackage,helloworld))
+$(eval $(call BuildPackage,rssi_polling))
 

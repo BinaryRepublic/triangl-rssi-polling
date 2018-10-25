@@ -1,10 +1,10 @@
 # build helloworld executable when user executes "make"
-helloworld: helloworld.o
-	$(CC) $(LDFLAGS) helloworld.o -lcurl -o helloworld
+rssi_polling: rssi_polling.o
+	$(CC) $(LDFLAGS) rssi_polling.o -lcurl -o rssi_polling
 
-helloworld.o: helloworld.c
-	$(CC) $(CFLAGS) -c -lcurl helloworld.c
+rssi_polling.o: rssi_polling.c
+	$(CC) $(CFLAGS) -c -lcurl rssi_polling.c
 
 # remove object files and executable when user executes "make clean"
 clean:
-	rm *.o helloworld
+	rm *.o rssi_polling
