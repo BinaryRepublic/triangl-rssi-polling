@@ -10,7 +10,7 @@
 #include <curl/curl.h>
 
 char *read_mac_address(char *path);
-char **split_trim_str(char *str, char delim);
+char **split_trim_str(char *str, char delim, int max);
 void free_split(char **split);
 char *station_to_json(char **station_data);
 time_t get_timestamp(char * str);
@@ -77,7 +77,7 @@ char *evaluate_csv(char *path)
             is_station = 1;
         else if (is_station && strlen(line) > 62)
         {
-            char **station_data = split_trim_str(line, ',');
+            char **station_data = split_trim_str(line, ',', 6);
             int last_seen = get_timestamp(station_data[2]);
             max_timestamp = last_seen > max_timestamp ? last_seen : max_timestamp;            
             if(last_seen > last_upload && split_length(station_data) >= 6)
@@ -142,7 +142,7 @@ char *trim (char *s)
     return r;
 }
 
-char **split_trim_str(char *str, char delim)
+char **split_trim_str(char *str, char delim, int max)
 {
     int len = strlen(str);
     int segments = 1; //first comman occurs at the end of the first segment
@@ -155,6 +155,7 @@ char **split_trim_str(char *str, char delim)
             segments += 1;
         }
     }
+    segments = segments > max?max:segments;
     char **splited_str = (char **)malloc((segments + 1) * sizeof(char *));
     char *str_cpy = str; 
     int seg = 0;
@@ -166,6 +167,8 @@ char **split_trim_str(char *str, char delim)
             // to only split replace trim with malloc
             splited_str[seg++] = trim(str); 
             str = i+1 >= len? str : str_cpy+i+1;
+            if (seg >= max)
+                break;
         }
     }
     splited_str[seg] = NULL;
