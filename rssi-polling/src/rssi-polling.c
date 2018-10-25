@@ -44,9 +44,9 @@ int main(int argc, char const *argv[])
 
 char *read_mac_address(char *path)
 {
+    char *mac_addr = NULL;
     size_t len = 0;
     FILE *mac_fp = fopen(path, "r");
-    char *mac_addr = NULL;
 
     if (mac_fp == NULL)
     {
@@ -62,7 +62,7 @@ char *read_mac_address(char *path)
 
 char *evaluate_csv(char *path)
 {
-    char * line = (char *)malloc(240);
+    char * line = (char *)malloc(500);
     size_t len = 240;
     int is_station = 0;
     int max_timestamp = last_upload;
@@ -108,7 +108,7 @@ time_t get_timestamp(char * str)
 
 char *station_to_json(char **station_data)
 {
-    char *json = create_json(240);
+    char *json = create_json(500);
 
     json_add_str(json, "deviceId", station_data[0]);
     json_add_str(json,"timestampString",station_data[2]);
