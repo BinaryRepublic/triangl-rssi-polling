@@ -62,11 +62,11 @@ char *read_mac_address(char *path)
 
 char *evaluate_csv(char *path)
 {
-    char * line = NULL;
-    size_t len = 0;
+    char * line = (char *)malloc(240);
+    size_t len = 240;
     int is_station = 0;
     int max_timestamp = last_upload;
-    char *json_arr = create_json_array(4096);
+    char *json_arr = create_json_array(65536);
     FILE *csv = fopen(path, "r");
 
     if (csv == NULL)
