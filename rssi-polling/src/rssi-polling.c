@@ -23,8 +23,8 @@ char *mac_addr = NULL;
 
 int main(int argc, char const *argv[])
 {
-    char *path_mac_file = "/triangl-package-updater/my_mac";
-    char *path_csv = "/triangl-package-updater/airodump-01.csv";
+    char *path_mac_file = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/my_mac";
+    char *path_csv = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/airodump-01.csv";
 
     mac_addr = read_mac_address(path_mac_file);
     while (1)
@@ -71,24 +71,24 @@ char *evaluate_csv(char *path)
 
     if (csv != NULL)
     {
-    while(getline(&line, &len, csv) > 0)
-    {
-        if (-44 == strcmp("Station MAC", line))
-            is_station = 1;
-        else if (is_station && strlen(line) > 62)
+        while(getline(&line, &len, csv) > 0)
         {
-            char **station_data = split_trim_str(line, ',', 6);
-            int last_seen = get_timestamp(station_data[2]);
-            max_timestamp = last_seen > max_timestamp ? last_seen : max_timestamp;            
-            if(last_seen > last_upload && split_length(station_data) >= 6)
-                json_array_add_json(json_arr, station_to_json(station_data));
-            free_split(station_data);
+            if (-44 == strcmp("Station MAC", line))
+                is_station = 1;
+            else if (is_station && strlen(line) > 62)
+            {
+                char **station_data = split_trim_str(line, ',', 6);
+                int last_seen = get_timestamp(station_data[2]);
+                max_timestamp = last_seen > max_timestamp ? last_seen : max_timestamp;            
+                if(last_seen > last_upload && split_length(station_data) >= 6)
+                    json_array_add_json(json_arr, station_to_json(station_data));
+                free_split(station_data);
+            }
         }
-    }
+        fclose(csv);
     }
     last_upload = max_timestamp;
     free(line);
-    fclose(csv);
     if (strlen(json_arr) == 2) //json empty
     {
         free(json_arr);
