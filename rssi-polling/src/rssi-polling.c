@@ -23,21 +23,23 @@ char *mac_addr = NULL;
 
 int main(int argc, char const *argv[])
 {
-    char *path_mac_file = "/triangl-package-updater/my_mac";
-    char *path_csv = "/triangl-package-updater/airodump-01.csv";
+    char *path_mac_file = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/my_mac";
+    char *path_csv = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/airodump-01.csv";
 
+    last_upload = (int)time(NULL);
     mac_addr = read_mac_address(path_mac_file);
+    curl_global_init(CURL_GLOBAL_ALL);
     while (1)
     {
         char *json_output = evaluate_csv(path_csv);
-        if (json_output == NULL)
-            sleep(2);
-        else
+        if (json_output != NULL)
         {
             post(json_output);
             free(json_output);
         }
+        sleep(2);
     }
+    curl_global_cleanup();
     free(mac_addr);
 }
 
@@ -100,6 +102,8 @@ char *evaluate_csv(char *path)
 time_t get_timestamp(char * str)
 {
     struct tm tm;
+    if (str == NULL)
+        return 0;
     if (strptime(str, "%Y-%m-%d %H:%M:%S", &tm) != NULL)
         return(mktime(&tm));
     else
@@ -199,7 +203,6 @@ void post(char *json)
     header = curl_slist_append(header, "Content-Type: application/json");
     curl_slist_append(header, "charsets: utf-8");
 
-    curl_global_init(CURL_GLOBAL_ALL);
     curl = curl_easy_init();
 
     if(curl) {
@@ -220,5 +223,4 @@ void post(char *json)
 
         curl_easy_cleanup(curl);
     }
-    curl_global_cleanup();
 }
