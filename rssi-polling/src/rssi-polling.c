@@ -23,7 +23,7 @@ char *mac_addr = NULL;
 
 int main(int argc, char const *argv[])
 {
-    char *path_mac_file = "/triangl-package-updater/src/my_mac";
+    char *path_mac_file = "/triangl-package-updater/my_mac";
     char *path_csv = "/triangl-package-updater/airodump-01.csv";
 
     last_upload = (int)time(NULL);
