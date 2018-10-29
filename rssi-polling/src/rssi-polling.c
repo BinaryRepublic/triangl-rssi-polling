@@ -23,8 +23,8 @@ char *mac_addr = NULL;
 
 int main(int argc, char const *argv[])
 {
-    char *path_mac_file = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/my_mac";
-    char *path_csv = "/home/wolf/Documents/Coding_Projects/triangl-rssi-polling/rssi-polling/src/airodump-01.csv";
+    char *path_mac_file = "/triangl-package-updater/src/my_mac";
+    char *path_csv = "/triangl-package-updater/airodump-01.csv";
 
     last_upload = (int)time(NULL);
     mac_addr = read_mac_address(path_mac_file);
