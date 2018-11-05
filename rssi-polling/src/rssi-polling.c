@@ -116,7 +116,6 @@ char *station_to_json(char **station_data)
 
     json_add_str(json, "deviceId", station_data[0]);
     json_add_str(json,"timestampString",station_data[2]);
-    //json_add_int(json, "signalStrength", atoi(station_data[3]));
     json_add_charint(json,"signalStrength", station_data[3]);
     json_add_str(json, "routerId", mac_addr);
     json_add_str(json, "associatedAP", station_data[5]);
